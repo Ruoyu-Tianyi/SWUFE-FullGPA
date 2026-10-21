@@ -147,6 +147,19 @@ print(math.sqrt(9))                # 3.0
 
 包/模块（Package / Module）通过 `import` 引入；`import numpy as np` 是为模块取别名，不改变其功能。避免把变量命名为 `list`、`sum` 等内置名称，以免遮蔽原功能。
 
+### 把函数与推导式用于一个订单问题
+
+**需求：计算两笔订单各自的金额，再求合计。** 每个元组表示 `(单价, 数量)`，单位分别是元/件和件；沿用上面的 `revenue(price, quantity)` 函数。
+
+```python
+orders = [(8, 3), (5, 1)]
+amounts = [revenue(price, qty) for price, qty in orders]
+print(amounts)       # [24, 5]，一笔订单对应一个金额
+print(sum(amounts))  # 29，两笔订单合计
+```
+
+把推导式拆开读：`for price, qty in orders` 逐笔拆出两个输入；`revenue(price, qty)` 计算该笔金额；最外层 `[...]` 收集返回值。函数若只 `print(total)` 而不 `return total`，屏幕仍会显示金额，但 `amounts` 会收集到 `[None, None]`，无法用于后面的求和。这就是“显示结果”和“把结果交给下一步计算”的区别。
+
 ## 6. Notebook 中的文字与公式
 
 代码单元（Code Cell）运行 Python；Markdown 单元记录解释。常用 Markdown：`# 标题`、`**粗体**`、`- 列表`、`[文字](网址)`。LaTeX 行内公式用 `$...$`，独立公式用 `$$...$$`。这些是写作和解释工具，不会自动执行 Python。

@@ -114,12 +114,19 @@ prediction = test["Sex"].apply(survival_by_gender)
 例如，`lead_time > 100` 与 `deposit_type == "No Deposit"` 是两个条件，组合时要用括号：
 
 ```python
-# 假设 bookings 已包含这两列
-# risky = (bookings["lead_time"] > 100) & (
-#     bookings["deposit_type"] == "No Deposit"
-# )
-# prediction = risky.astype(int)
+bookings = pd.DataFrame({
+    "booking_id": ["B01", "B02", "B03"],
+    "lead_time": [30, 120, 150],  # 预订到入住的天数
+    "deposit_type": ["No Deposit", "No Deposit", "Non Refund"],
+})
+risky = (bookings["lead_time"] > 100) & (
+    bookings["deposit_type"] == "No Deposit"
+)
+rule_prediction = risky.astype(int)
+print(rule_prediction.tolist())  # [0, 1, 0]，1 表示预测取消
 ```
+
+上面三行是自建订单：B01 没超过 100 天，输出 0；B02 同时满足两个条件，输出 1；B03 虽提前 150 天，但押金类型不匹配，仍输出 0。`&` 要求两项都成立，`.astype(int)` 再把布尔值转成提交需要的 0/1。此处只有预测，没有真实取消标签，所以不能直接计算这三行的准确率。
 
 阈值 100 只是示意，不是课程指定的最优阈值。样本很少的组出现 100% 取消率，并不能说明该规则值得推广。
 

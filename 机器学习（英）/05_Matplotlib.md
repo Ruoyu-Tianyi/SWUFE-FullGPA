@@ -95,12 +95,16 @@ fig, axes = plt.subplots(1, 2, figsize=(10, 4))
 df.groupby("store")["sales"].sum().plot.bar(ax=axes[0])
 axes[0].set_title("Total sales by store")
 axes[0].set_ylabel("Sales")
-df["sales"].plot.hist(bins=3, ax=axes[1])
+df["sales"].plot.hist(bins=[0, 10, 15, 25], ax=axes[1])
 axes[1].set_title("Distribution of transaction sales")
 axes[1].set_xlabel("Sales per transaction")
 fig.tight_layout()
 plt.show()
 ```
+
+**这两幅图分别回答什么？** 假设上表一行是一笔交易，`sales` 是金额（元）。左图先按门店合计，柱高为 A=22、B=43 元，比较的是门店总收入；右图不分门店，将五笔金额 `[10,12,8,15,20]` 放入金额区间，比较的是交易金额分布。
+
+右图显式指定区间边界 `[0,10,15,25]`，三根柱分别计 `[0,10)`、`[10,15)`、`[15,25]`，频数是 `1、2、2` 笔。柱高为 2 表示该区间有两笔交易，不表示收入为 2 元。`ax=axes[1]` 只决定画在右侧绘图区，不会筛选第二家门店。
 
 Pandas 绘图默认基于 Matplotlib；传入 `ax=` 可以把图画在指定绘图区。默认频数直方图的柱高是落入区间的观测数；若改为密度（Density）图，应按面积解释，不能仍当作原始频数。
 
